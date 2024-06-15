@@ -1,4 +1,4 @@
-from flask import Flask, request, app, jsonify, url_for, render_template
+from flask import Flask, request, app, render_template
 import pandas as pd
 import numpy as np
 import pickle
@@ -10,7 +10,6 @@ SCALER_PATH = windows_to_posix(r'Notebooks\scaler.sav')
 QUANTILE_PATH = windows_to_posix(r'Notebooks\quantile.sav')
 
 app = Flask(__name__)
-fl.Swagger(app)
 
 model_file = open(MODEL_PATH, 'rb')
 scaler_file = open(SCALER_PATH, 'rb')
@@ -23,27 +22,20 @@ quantile = pickle.load(quantile_file)
 @app.route('/')
 
 def home():
-    return 'Hello World'
+    return render_template('home.html')
 
-@app.route('prediction', methods=["GET"])
+@app.route('/predict', methods=['POST'])
+def predict():
+    '''
 
-def prediction_auth_note():
-    
+    '''
 
-@app.route('/prediction', methods=["POST"])
-def prediction_api():
-    
-    data = request.json["data"]
-    print(data)
-    print(np.array(list(data.values())).reshape(1, -1))
+    data = [float(x) for x in request.form.values()]
+    final_input = scaler.transform(quantile.transform(np.array(data).reshape(1, -1)))
 
-    transformed_data = scaler.transform(quantile.transform(np.array(list(data.values())).reshape(1, -1)))
-    
-    # Perform the prediction
-    prediction = model.predict(transformed_data)
-    print(prediction[0])
+    prediction = model.predict(final_input)[0]
 
-    return jsonify(str(prediction[0]))
+    return render_template('home.html', prediction_text='The predicted authentication bank note: {}'.format(prediction))
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5000, debug=True)
