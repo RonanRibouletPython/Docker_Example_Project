@@ -5,9 +5,9 @@ import pickle
 from utilities import windows_to_posix
 import flasgger as fl
 
-MODEL_PATH = windows_to_posix(r'Notebooks\linear_regression.pkl')
-SCALER_PATH = windows_to_posix(r'Notebooks\scaler.sav')
-QUANTILE_PATH = windows_to_posix(r'Notebooks\quantile.sav')
+MODEL_PATH = windows_to_posix(r'linear_regression.pkl')
+SCALER_PATH = windows_to_posix(r'scaler.sav')
+QUANTILE_PATH = windows_to_posix(r'quantile.sav')
 
 app = Flask(__name__)
 
