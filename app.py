@@ -3,12 +3,14 @@ import pandas as pd
 import numpy as np
 import pickle
 from utilities import windows_to_posix
+import flasgger as fl
 
 MODEL_PATH = windows_to_posix(r'Notebooks\linear_regression.pkl')
 SCALER_PATH = windows_to_posix(r'Notebooks\scaler.sav')
 QUANTILE_PATH = windows_to_posix(r'Notebooks\quantile.sav')
 
 app = Flask(__name__)
+fl.Swagger(app)
 
 model_file = open(MODEL_PATH, 'rb')
 scaler_file = open(SCALER_PATH, 'rb')
@@ -23,10 +25,15 @@ quantile = pickle.load(quantile_file)
 def home():
     return 'Hello World'
 
+@app.route('prediction', methods=["GET"])
+
+def prediction_auth_note():
+    
+
 @app.route('/prediction', methods=["POST"])
 def prediction_api():
     
-    data = request.json
+    data = request.json["data"]
     print(data)
     print(np.array(list(data.values())).reshape(1, -1))
 
